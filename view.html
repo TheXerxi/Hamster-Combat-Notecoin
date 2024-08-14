@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="get_top_users.php"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> Legacy Adventure</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    
+    img {
+      position: fixed;
+      top:10px;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-image:  linear-gradient(to left, #000000, #6A0DAD,#000000, black );
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    h1 {
+      position: fixed;
+      color: #333;
+      top:0px;
+    }
+    #scoreResult {
+      margin: 20px;
+      padding: 20px;
+      position: absolute;
+    top: 7%;
+      background-color: #000000;
+      color:#ccc;
+      border: 1px solid #ccc;
+      border-radius: 25px;
+      box-shadow: 0 0 10px #0000001a;
+      width: 300px;
+      text-align: center;
+    }
+    /* #increaseScoreButton {
+      background: #000000;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: background 0.3s;
+    } */
+
+    .arrow {
+  cursor: pointer;
+  transition: filter 0.3s ease 0.3s;
+}
+
+.arrow:active {
+  filter: drop-shadow(0 0 0 steelblue);
+  transition: filter 0s;
+}
+    #increaseScoreButton {
+      background: url(logsh.png);
+      height:162px;
+      width:152px;
+  border: none;        /* Usuwa obramowanie */
+  outline: none;       /* Usuwa domyślne obramowanie fokusu */
+  box-shadow: none;    /* Usuwa cień */
+  justify-content: center; /* Centrowanie w poziomie */
+  cursor: pointer;     /* Ustawia kursor na wskaźnik */
+  padding: 0;          /* Usuwa wewnętrzny padding */
+  -webkit-tap-highlight-color: #4d9078;
+    }
+    .hidden-button .increaseScoreButton {
+    visibility: hidden; /* Lub użyj visibility: hidden; */
+}
+
+    #nav {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      margin: 20px;
+      
+      position: fixed; /* Ustawienie absolutne stopki */
+      bottom: 0;
+    }
+    .nav-item {
+      margin: 0 0px;
+      text-align: center;
+      color:white;
+      
+    }
+    .nav-item a img {
+    display: none; /* lub */
+    visibility: hidden;
+}
+    .nav-item a {
+      text-decoration: none;
+      color: #ffffff;
+      display: block;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: background 0.3s;
+      width: 45px;
+      height: 45px;
+    }
+    .nav-item a:hover {
+      background: #000000;
+    }
+    .nav-item i {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+    .section {
+      display: none;
+    }
+    .active {
+      display: block;
+      color:white;
+      border-radius: 10px;
+    }
+
+    table {
+      border-radius: 10px;
+      background-color: #000000;
+    display: table;
+    border-collapse: separate;
+    box-sizing: border-box;
+    text-indent: initial;
+    unicode-bidi: isolate;
+    border-spacing: 2px;
+    border-color: gray;
+    color:#ccc;
+}
+    .tasks-container {
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #000000;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      width: 80%;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    .tasks-title {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .tasks-description {
+      margin-bottom: 20px;
+      
+    }
+
+    .social-like-button {
+      background-color: #1877f2;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: background 0.3s;
+    }
+
+    .social-like-button:hover {
+      background-color: #145993;
+    }
+  </style>
+</head>
+<body>
+
+  <img src = "pepe.png">
+
+  <div id="scoreResult"></div><div class="arrow">
+  <button id="increaseScoreButton"></button>
+</div>
+  <div id="nav">
+    <div class="nav-item">
+      <a href="#" data-section="home">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+      </a>
+    </div>
+    <div class="nav-item">
+      <a href="#" data-section="stats">
+        <i class="fas fa-chart-line"></i>
+        <span>Stats</span>
+      </a>
+    </div>
+    <div class="nav-item">
+      <a href="#" data-section="shop">
+        <i class="fas fa-store"></i>
+        <span>Shop</span>
+      </a>
+    </div>
+
+    <div class="nav-item">
+      <a href="#" data-section="tasks" onclick="hideButton()">
+        <i class="fas fa-snowboarding"></i>
+        <span>Tasks</span>
+      </a>
+    </div>
+    
+    <div class="nav-item">
+      <a href="#" data-section="ranks">
+        <i class="fa-solid fa-chess-rook"></i>
+        <span>Ranks</span>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Sekcje -->
+  <div id="home" class="section active">
+    <p>Welcome! Wait for updates. <p></p>Game build in progress.
+      Feel free to criticize, any feedback is welcome. <p></p>
+      Click PepeLegacy Logo to Score points.
+    </p>
+  </div>
+  <div id="shop" class="section">
+    <p>Upgrades to upgrade your champion will be there.</p>
+  </div>
+  <div id="stats" class="section">
+    <p>Here are the Stats.</p>
+  </div>
+
+  <div id="tasks" class="section">
+    <div class="tasks-container">
+</div>
+  </div>
+
+  <div id="ranks" class="section">
+    <table id="playersTable">
+      <table id="user-table">
+        <thead>
+              <tr>
+                  <th>Nickname</th>
+                  <th>Score</th>
+              </tr>
+          </thead>
+          <tbody></tbody>
+      </table>
+  </div>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+            // Pobranie ID gracza z parametru URL
+            const playerId = getParameterByName('id');
+
+            // Pobranie wyniku gracza przy ładowaniu strony
+            fetchScore();
+
+            // Obsługa kliknięcia przycisku zwiększenia wyniku
+            document.getElementById('increaseScoreButton').addEventListener('click', increaseScore);
+
+            // Obsługa nawigacji
+            document.querySelectorAll('#nav a').forEach(navLink => {
+                navLink.addEventListener('click', event => {
+                    event.preventDefault();
+                    const sectionId = navLink.getAttribute('data-section');
+                    showSection(sectionId);
+                });
+            });
+
+            // Pobranie danych graczy do tabeli rankingowej
+            refreshData();
+
+            // Cykliczne odświeżanie danych (np. co 10 sekund)
+            setInterval(refreshData, 10000);
+
+            // Pobranie parametrów z URL
+            function getParameterByName(name, url) {
+                if (!url) url = window.location.href;
+                name = name.replace(/[\[\]]/g, '\\$&');
+                var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+                    results = regex.exec(url);
+                if (!results) return null;
+                if (!results[2]) return '';
+                return decodeURIComponent(results[2].replace(/\+/g, ' '));
+            }
+
+            // Pobranie wyniku gracza z serwera
+            async function fetchScore() {
+                try {
+                    const response = await fetch(`/game/getplayerscore.php?id=${playerId}`);
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        document.getElementById('scoreResult').innerHTML = `
+                            <p>Hello, ${data.nickname}! Your score is: <span id="playerScore">${data.score}</span></p>
+                        `;
+                    } else {
+                        document.getElementById('scoreResult').innerText = data.error || 'Error occurred.';
+                    }
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                    document.getElementById('scoreResult').innerText = 'Error occurred.';
+                }
+            }
+
+            // Zwiększenie wyniku gracza na serwerze
+            async function increaseScore() {
+                try {
+                    const response = await fetch(`/game/getplayerscore.php?id=${playerId}&action=increase`);
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        document.getElementById('playerScore').innerText = data.score;
+                    } else {
+                        console.error(data.error || 'Error occurred while increasing score.');
+                    }
+                } catch (error) {
+                    console.error('Error increasing score:', error);
+                }
+            }
+
+            // Odświeżenie danych rankingowych z serwera
+            async function refreshData() {
+                try {
+                    const response = await fetch('get_top_users.php');
+                    const data = await response.json();
+
+                    if (Array.isArray(data) && data.length > 0) {
+                        const tableBody = document.querySelector('#user-table tbody');
+                        tableBody.innerHTML = '';
+
+                        data.forEach(player => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `<td>${player.nickname}</td><td>${player.score}</td>`;
+                            tableBody.appendChild(row);
+                        });
+                    } else {
+                        console.error('No data or invalid data structure');
+                    }
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            }
+
+            // Wyświetlenie odpowiedniej sekcji
+            function showSection(sectionId) {
+                document.querySelectorAll('.section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(sectionId).classList.add('active');
+            }
+
+            // Pobranie zadań z serwera i wyświetlenie ich
+            function fetchTasks() {
+                fetch('get_tasks.php')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        displayTasks(data.tasks);
+                    } else {
+                        console.error('Failed to fetch tasks:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching tasks:', error);
+                });
+            }
+
+            // Wywołanie funkcji pobierającej zadania przy ładowaniu strony
+            fetchTasks();
+
+            // Wyświetlenie listy zadań w interfejsie użytkownika
+            function displayTasks(tasks) {
+                const tasksContainer = document.querySelector('.tasks-container');
+                tasksContainer.innerHTML = '';
+
+                tasks.forEach(task => {
+                    const { id, title, description, action_url, points } = task;
+
+                    const taskHtml = `
+                        <div class="task">
+                            <h3>${title}</h3>
+                            <p>${description}</p>
+                            <p>Points: ${points}</p>
+                            <a href="${action_url}" target="_blank">Do task</a>
+                            <button class="completeTask" data-task-id="${id}">Complete Task</button>
+                        </div>
+                    `;
+
+                    tasksContainer.innerHTML += taskHtml;
+                });
+
+                // Obsługa kliknięcia przycisku completeTask
+                const completeButtons = document.querySelectorAll('.completeTask');
+                completeButtons.forEach(button => {
+                    button.addEventListener('click', async function() {
+                        const taskId = this.getAttribute('data-task-id');
+                        await completeTask(taskId, playerId);
+                    });
+                });
+            }
+
+           
+            async function completeTask(taskId, playerId) { // Zmienione playerId na telegramId
+    const data = {
+        task_id: taskId,
+        telegramId: playerId
+    };
+
+    console.log('Sending request with taskId:', taskId, 'and telegramId:', playerId);
+
+    try {
+        const response = await fetch('/complete_task.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            console.log('Success:', result.message);
+            alert('Reward claimed successfully!');
+        } else {
+            console.log('Failure:', result.message);
+            alert(result.message);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error: ' + error);
+    }
+}
+
+document.getElementById('rewardButton').addEventListener('click', () => {
+    completeTask(1, 1554724148); // Podaj odpowiednie wartości
+});
+
+        });
+  </script>
+</body>
+</html>
