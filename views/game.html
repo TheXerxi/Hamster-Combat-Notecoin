@@ -1,0 +1,32 @@
+<!-- game.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Page</title>
+    <!-- Dodaj tutaj CSS lub inne zależności -->
+</head>
+<body>
+    <h1>Game Page</h1>
+    <div id="user-data">
+        <!-- Dane użytkownika będą ładowane dynamicznie przez JavaScript -->
+    </div>
+
+    <script>
+        // Assuming this script is included in an HTML file or a JavaScript environment
+      
+        // Check if username parameter exists in the query string
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('username')) {
+          // Get the value of username parameter
+          const username = urlParams.get('username');
+          // Use username as needed
+          document.write(`Hello, ${username}!`);
+        } else {
+          document.write('Username parameter not provided.');
+        }
+      </script>
+      
+</body>
+</html>
